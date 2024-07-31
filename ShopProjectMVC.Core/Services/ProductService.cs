@@ -17,12 +17,12 @@ public class ProductService : IProductService
         return _repository.Add(product);
     }
 
-    public Task<Order> BuyProduct(int userId, int productId)
+    public async Task<Order> BuyProduct(int userId, int productId)
     {
-        Order order = new Order();
-        order.User.Id = userId;
-        order.Product.Id = productId;
-        return _repository.Add(order);
+        Product product = await _repository.GetById<Product>(productId);
+        User user = await _repository.GetById<User>(userId);
+        Order order = new Order() {Product = product, User = user, CreatedAt=DateTime.Now};
+        return await _repository.Add(order);
     }
 
     public Task DeleteProduct(int id)
