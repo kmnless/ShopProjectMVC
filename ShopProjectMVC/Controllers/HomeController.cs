@@ -23,10 +23,6 @@ namespace ShopProjectMVC.Controllers
 
         public IActionResult Privacy()
         {
-            if (HttpContext.Session.GetString("user") == null)
-            {
-                return RedirectToAction("Login", "User");
-            }
             return View();
         }
 

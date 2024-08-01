@@ -14,10 +14,6 @@ public class OrdersController : Controller
 
     public IActionResult Index()
     {
-        if (HttpContext.Session.GetString("user") == null)
-        {
-            return RedirectToAction("Login", "User");
-        }
         var orders = _orderService.GetOrders(1).ToList();
         return View(orders);
     }

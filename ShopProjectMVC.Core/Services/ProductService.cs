@@ -19,10 +19,27 @@ public class ProductService : IProductService
 
     public async Task<Order> BuyProduct(int userId, int productId)
     {
-        Product product = await _repository.GetById<Product>(productId);
-        User user = await _repository.GetById<User>(userId);
-        Order order = new Order() {Product = product, User = user, CreatedAt=DateTime.Now};
-        return await _repository.Add(order);
+        var product = await _repository.GetById<Product>(productId);
+        var user = await _repository.GetById<User>(userId);
+
+        if(product.Count <= 0)
+        {
+            throw new InvalidOperationException();
+        }
+
+        product.Count--;
+
+        var order = new Order()
+        {
+            Product = product,
+            User = user,
+            CreatedAt = DateTime.UtcNow,
+        };
+
+        await _repository.Add(order);
+        //await _repository.Update(product);
+
+        return order;
     }
 
     public Task DeleteProduct(int id)
@@ -47,6 +64,6 @@ public class ProductService : IProductService
 
     public Task<Product> UpdateProduct(Product product)
     {
-        return _repository.Update<Product>(product);
+        return _repository.Update(product);
     }
 }
